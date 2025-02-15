@@ -16,8 +16,18 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path(
+        "api/v1/library-service/",
+        include("service.urls"),
+        name="library-service"
+    ),
+    path(
+        "api/v1/library-service/user/",
+        include("user.urls"),
+        name="user"
+    ),
 ]
