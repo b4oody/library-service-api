@@ -10,16 +10,21 @@ class Author(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    class Meta:
+        unique_together = ("first_name", "last_name")
+
 
 class Book(models.Model):
     class CoverType(models.TextChoices):
         hard = "HARD"
         soft = "SOFT"
 
-    title = models.CharField(max_length=100)
-    author = models.ForeignKey(
+    title = models.CharField(max_length=100, unique=True)
+    author = models.ManyToManyField(
         Author,
-        on_delete=models.CASCADE,
         related_name="books",
     )
     cover = models.CharField(
