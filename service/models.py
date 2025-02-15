@@ -35,7 +35,8 @@ class Book(models.Model):
     daile_free = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
-        return f"{self.title}({self.author})"
+        authors = ", ".join(author.last_name for author in self.author.all())
+        return f"{self.title} by {authors}"
 
 
 class Borrowing(models.Model):
