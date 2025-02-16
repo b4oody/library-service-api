@@ -6,19 +6,20 @@ from service.serializers import (
     AuthorSerializer,
     BookListSerializer,
     BookCreateSerializer,
-    BorrowingSerializer,
+    BorrowingListSerializer,
+    BorrowingCreateSerializer,
 )
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-    permission_classes = [permissions.IsAdminOrReadOnly]
+    # permission_classes = [permissions.IsAdminOrReadOnly]
 
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    serializer_class = BookListSerializer
+
     # permission_classes = [permissions.IsAdminOrReadOnly]
 
     def get_serializer_class(self):
@@ -29,4 +30,11 @@ class BookViewSet(viewsets.ModelViewSet):
 
 class BorrowingSerializerViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
-    serializer_class = BorrowingSerializer
+
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return BorrowingListSerializer
+        return BorrowingCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

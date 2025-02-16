@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from service.models import (
@@ -33,19 +34,12 @@ class BookCreateSerializer(serializers.ModelSerializer):
             "daile_free"
         ]
 
-    def validate_inventory(self, inventory):
-        if inventory <= 0:
-            raise serializers.ValidationError("Inventory must be greater than 0")
-
 
 class BookListSerializer(BookCreateSerializer):
     author = AuthorListSerializer(many=True, read_only=True)
 
 
-class BorrowingSerializer(serializers.ModelSerializer):
-    book = serializers.CharField(source="book.title")
-    user = serializers.CharField(source="user.username")
-
+class BorrowingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
         fields = [
@@ -54,5 +48,18 @@ class BorrowingSerializer(serializers.ModelSerializer):
             "expected_return",
             "actual",
             "book",
-            "user"
         ]
+
+    @transaction.atomic
+    def create(self, validated_data):
+        book = validated_data.get("book")
+        if book.inventory <= 0:
+            raise serializers.ValidationError("This book is out of stock")
+        borrow = Borrowing.objects.create(**validated_data)
+        book.inventory -= 1
+        book.save()
+        return borrow
+
+
+class BorrowingListSerializer(BorrowingCreateSerializer):
+    book = serializers.CharField(source="book.title")
