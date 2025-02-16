@@ -33,6 +33,10 @@ class BookCreateSerializer(serializers.ModelSerializer):
             "daile_free"
         ]
 
+    def validate_inventory(self, inventory):
+        if inventory <= 0:
+            raise serializers.ValidationError("Inventory must be greater than 0")
+
 
 class BookListSerializer(BookCreateSerializer):
     author = AuthorListSerializer(many=True, read_only=True)
