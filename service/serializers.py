@@ -14,14 +14,14 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class AuthorListSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField()
+
     class Meta:
         model = Author
         fields = ["id", "full_name"]
 
 
-class BookSerializer(serializers.ModelSerializer):
-    author = AuthorListSerializer(many=True)
-
+class BookCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = [
@@ -32,6 +32,10 @@ class BookSerializer(serializers.ModelSerializer):
             "inventory",
             "daile_free"
         ]
+
+
+class BookListSerializer(BookCreateSerializer):
+    author = AuthorListSerializer(many=True, read_only=True)
 
 
 class BorrowingSerializer(serializers.ModelSerializer):

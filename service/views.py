@@ -4,7 +4,8 @@ from service import permissions
 from service.models import Author, Book, Borrowing
 from service.serializers import (
     AuthorSerializer,
-    BookSerializer,
+    BookListSerializer,
+    BookCreateSerializer,
     BorrowingSerializer,
 )
 
@@ -17,8 +18,13 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [permissions.IsAdminOrReadOnly]
+    serializer_class = BookListSerializer
+    # permission_classes = [permissions.IsAdminOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return BookListSerializer
+        return BookCreateSerializer
 
 
 class BorrowingSerializerViewSet(viewsets.ModelViewSet):
