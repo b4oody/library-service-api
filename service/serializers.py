@@ -39,7 +39,16 @@ class BookListSerializer(BookCreateSerializer):
     author = AuthorListSerializer(many=True, read_only=True)
 
 
-class BorrowingCreateSerializer(serializers.ModelSerializer):
+class DynamicFieldsModelSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
+        if "request" in self.context:
+            user = self.context["request"].user
+            if not user.is_staff:
+                self.fields.pop("user", None)
+
+
+class BorrowingCreateSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Borrowing
         fields = [
