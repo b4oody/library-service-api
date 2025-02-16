@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from service import permissions
 from service.models import Author, Book, Borrowing
@@ -29,6 +30,14 @@ class BookViewSet(viewsets.ModelViewSet):
 
 class BorrowingSerializerViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset
+        user = self.request.user
+        if user.is_staff:
+            return queryset
+        return queryset.filter(user=user)
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
