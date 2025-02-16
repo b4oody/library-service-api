@@ -1,4 +1,6 @@
-from rest_framework import viewsets
+from django.http import HttpResponse
+from rest_framework import viewsets, generics, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
 from service import permissions
@@ -9,6 +11,7 @@ from service.serializers import (
     BookCreateSerializer,
     BorrowingListSerializer,
     BorrowingCreateSerializer,
+    ReturnBookSerializer,
 )
 
 
@@ -46,3 +49,27 @@ class BorrowingSerializerViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class ReturnBookBorrowing(
+    generics.RetrieveAPIView,
+    generics.UpdateAPIView
+):
+    queryset = Borrowing.objects.all()
+    serializer_class = ReturnBookSerializer
+
+    def put(self, *args, **kwargs):
+        borrowing = self.get_object()
+        if not borrowing.is_active:
+            raise ValidationError({"borrowing": "This book have returned."})
+        borrowing.is_active = False
+        borrowing.book.inventory += 1
+        borrowing.book.save()
+        borrowing.save()
+        return HttpResponse(
+            "The book have returned success!",
+            status.HTTP_200_OK
+        )
+
+    def patch(self, request, *args, **kwargs):
+        self.put()

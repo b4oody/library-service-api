@@ -63,3 +63,11 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
 
 class BorrowingListSerializer(BorrowingCreateSerializer):
     book = serializers.CharField(source="book.title")
+
+
+class ReturnBookSerializer(serializers.ModelSerializer):
+    book = serializers.CharField(source="book.title", read_only=True)
+
+    class Meta:
+        model = Borrowing
+        fields = ["id", "book", "is_active"]
