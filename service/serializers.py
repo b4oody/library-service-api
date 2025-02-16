@@ -53,11 +53,14 @@ class BorrowingCreateSerializer(DynamicFieldsModelSerializer):
         model = Borrowing
         fields = [
             "id",
+            "user",
             "borrow",
             "expected_return",
             "actual",
             "book",
+            "is_active"
         ]
+        extra_kwargs = {"is_active": {"read_only": True}}
 
     @transaction.atomic
     def create(self, validated_data):
