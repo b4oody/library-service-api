@@ -14,13 +14,12 @@ from service.serializers import (
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-    # permission_classes = [permissions.IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAdminOrReadOnly]
 
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-
-    # permission_classes = [permissions.IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
