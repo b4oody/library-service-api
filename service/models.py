@@ -53,6 +53,7 @@ class Borrowing(models.Model):
         on_delete=models.CASCADE,
         related_name="borrowings",
     )
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.user}({self.borrow} - {self.expected_return})"
