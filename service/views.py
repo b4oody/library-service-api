@@ -33,7 +33,13 @@ class BookViewSet(viewsets.ModelViewSet):
 
 class BorrowingSerializerViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ["update", "partial_update", "destroy"]:
+            self.permission_classes = [permissions.IsAdminOrReadOnly]
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super(BorrowingSerializerViewSet, self).get_permissions()
 
     def get_queryset(self):
         queryset = self.queryset
