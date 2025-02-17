@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     "service",
     "user",
     "rest_framework",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+    "telegram_bot",
 ]
 
 MIDDLEWARE = [
