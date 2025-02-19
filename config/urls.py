@@ -30,4 +30,10 @@ urlpatterns = [
         include("user.urls"),
         name="user"
     ),
+    path(
+        "api/v1/library-service/telegram/",
+        include("telegram_bot.urls"),
+        name="telegram-bot"
+    ),
+
 ]
