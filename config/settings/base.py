@@ -134,3 +134,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ]
 }
+
+TOKEN_TELEGRAM_BOT = os.environ.get("TOKEN")
+API_BASE_URL = os.environ["API_BASE_URL"]
+BOT_NAME_TELEGRAM = os.environ["BOT_NAME_TELEGRAM"]
