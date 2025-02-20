@@ -20,8 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "itex3vi%n(xe-mq)w862=nro#$up%ub5b2@hphezzi@&$afgy!"
+)
 
 # Application definition
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "telegram_bot",
+    "django_celery_beat"
 ]
 
 MIDDLEWARE = [
@@ -136,5 +139,11 @@ REST_FRAMEWORK = {
 }
 
 TOKEN_TELEGRAM_BOT = os.environ.get("TOKEN")
-API_BASE_URL = os.environ["API_BASE_URL"]
-BOT_NAME_TELEGRAM = os.environ["BOT_NAME_TELEGRAM"]
+API_BASE_URL = os.environ.get("API_BASE_URL")
+BOT_NAME_TELEGRAM = os.environ.get("BOT_NAME_TELEGRAM")
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
+CELERY_TIMEZONE = "Europe/Kyiv"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
