@@ -11,4 +11,4 @@ class TelegramUser(models.Model):
     unique_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
-        return self.user
+        return f"{self.user} {self.telegram_id}"
