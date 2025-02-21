@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -39,7 +38,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "telegram_bot",
-    "django_celery_beat"
+    "django_celery_beat",
+    "drf_spectacular"
 ]
 
 MIDDLEWARE = [
@@ -72,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -86,7 +85,6 @@ DATABASES = {
         "PORT": int(os.environ["POSTGRES_PORT"]),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -106,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -117,7 +114,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -131,13 +127,27 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user.User"
 
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
-    ]
+
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Library Service API",
+    "DESCRIPTION": "Library Service API modernizes library "
+                   "management by automating book borrowings, "
+                   "inventory tracking, and payments. It allows "
+                   "administrators to manage books, users, and "
+                   "transactions efficiently. Users can borrow "
+                   "books, check return dates, and track fees. "
+                   "The API handles book inventory, user registration, "
+                   "borrowing details, and fee calculations.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
 TOKEN_TELEGRAM_BOT = os.environ.get("TOKEN")
 API_BASE_URL = os.environ.get("API_BASE_URL")
 BOT_NAME_TELEGRAM = os.environ.get("BOT_NAME_TELEGRAM")
