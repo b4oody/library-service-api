@@ -10,18 +10,16 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("service", "0001_initial"),
+        ("telegram_bot", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="borrowing",
+            model_name="telegramuser",
             name="user",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="borrowings",
-                to=settings.AUTH_USER_MODEL,
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
             ),
         ),
     ]
